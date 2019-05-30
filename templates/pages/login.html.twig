@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row pt-5 pb-5">
+        <div id="loginbox" class="col-md-6 offset-md-3">
+            <div class="panel panel-info" >
+                <div class="panel-heading">
+                    <div class="panel-title">Log in</div>
+                </div>
+                {% if error %}
+                <div id="login-alert" class="alert alert-danger col-sm-12">
+                    {% if error.messageKey is defined %}
+                        {{ error.messageKey }}
+                    {% else %}
+                        {{ error }}
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="panel-body pt-2" >
+                    <form id="loginform" method="post" class="form-horizontal" action="{{ path('app_login') }}">
+
+                        <div class="input-group mb-2">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="login-username" type="email" class="form-control" name="email" value="{{ last_username }}" placeholder="email@example.com">
+                        </div>
+
+                        <div class="input-group mb-2">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="login-password" type="password" class="form-control" name="password" placeholder="password">
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        </div>
+
+                        <div class="form-group mt-1">
+                            <input type='submit' class="btn btn-success" value="Sign in"/>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-md-12 control">
+                                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                                    You do not have an account
+                                    <a href="#" onClick="$('#loginbox').hide(); $('#signupbox').show()">
+                                        Singup here
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="signupbox" style="display:none;" class="col-md-6 offset-md-3">
+            <div class="panel panel-info">
+                <div class="panel-body" >
+                    <form id="signupform"  method="post" class="form-horizontal" role="form" action="{{ path('user.registre') }}" >
+
+                        <div id="signupalert" style="display:none" class="alert alert-danger">
+                            {{ error }}
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <input type="email" class="form-control" name="email" placeholder="email@example.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-9">
+                                <input type="password" class="form-control" name="password" placeholder="password">
+                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <!-- Button -->
+                            <div class="col-md-offset-3 col-md-9">
+                                <button id="btn-signup" type="submit" class="btn btn-info"><i class="icon-hand-right"></i>Sign up</button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12 control">
+                                <div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
+                                    If you already have an account
+                                    <a id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()">Log in</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    {% if has_error is defined and has_error == true %}
+       $(document).ready(function() {
+            $('#loginbox').hide();
+            $('#signupbox').show();
+            $('#signupalert').css({'display':'block'});
+        });
+    {% endif %}
+</script>
+{% endblock %}

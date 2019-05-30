@@ -16,12 +16,17 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+            <li class="nav-item {% if menu_active is defined and menu_active == 'nearby_shops'%}active{% endif %}">
                 <a class="nav-link" href="#">Nearby Shops</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item {% if menu_active is defined and menu_active == 'preferred_shops'%}active{% endif %}">
                 <a class="nav-link" href="#">My preferred Shops</a>
             </li>
+        {% if app.user %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('logout') }}"><span class="font-icon glyphicon glyphicon-log-out"></span>Logout</a>
+            </li>
+        {% endif %}
         </ul>
     </div>
 </nav>

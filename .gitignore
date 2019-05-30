@@ -19,4 +19,5 @@
 
 ###> phpstrom ###
 /.idea/
+*.DS_Store
 ###< phpstrom ###

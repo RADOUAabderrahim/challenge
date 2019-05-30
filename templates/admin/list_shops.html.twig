@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>List of all shops</h1>
+
+    <a href="{{ path('shops.new') }}" class="btn btn-primary">New Shop</a>
+    <hr>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Distance</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for shop in shops %}
+            <tr>
+                <td>
+                    {{ shop.name }}
+                </td>
+                <td>
+                    {{ shop.distance }} m
+                </td>
+                <td>
+                    <a href="{{ path('shops.edit',{id:shop.id}) }}" class="btn btn-primary">Edit</a>
+                    <form method="post" style="display: inline-block" action="{{ path('shops.delete',{id:shop.id}) }}" onsubmit="return confirm('Are you sure?')">
+                        <input type="hidden" name="_method" value="DELETE" >
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ shop.id) }}" >
+                        <button class="btn btn-danger">delete</button>
+                    </form>
+
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
