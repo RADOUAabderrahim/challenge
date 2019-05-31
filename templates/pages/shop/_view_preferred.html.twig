@@ -1,0 +1,17 @@
+{% for shop in shops %}
+    <div class="col-3 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title" style="height: 50px">{{ shop.name }}</h5>
+                <img src="{{ asset('/img/zone.svg') }}" class="rounded mx-auto d-block"/>
+                <p class="card-text"><span class="p-3">Distance : {{ shop.distance }} m</span></p>
+                <div class="card-footer">
+                    <form method="post" style="display: inline-block" action="{{ path('shops.preferred.remove',{id:shop.id}) }}" >
+                        <input type="hidden" name="_token" value="{{ csrf_token('opinion' ~ shop.id) }}" >
+                        <input type="submit" name="submit" value="remove" class="btn btn-sm btn-danger"/>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endfor %}

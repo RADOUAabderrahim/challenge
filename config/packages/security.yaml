@@ -18,14 +18,14 @@ security:
             anonymous: ~
             logout:
                 path: /logout
-                target: /login
+                target: /
             form_login:
                 check_path: app_login
                 login_path: app_login
                 username_parameter: _email
                 password_parameter: _password
                 csrf_token_generator: security.csrf.token_manager
-                failure_path: home
+                failure_path: app_login
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 

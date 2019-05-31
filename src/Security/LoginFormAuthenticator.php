@@ -97,7 +97,7 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         if(in_array('ROLE_ADMIN',$token->getUser()->getRoles())){
             return new RedirectResponse($this->router->generate('shops.list'));
         }else{
-            return new RedirectResponse($this->router->generate('home'));
+            return new RedirectResponse($this->router->generate('shops.nearby'));
         }
     }
 

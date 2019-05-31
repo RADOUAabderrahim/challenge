@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -10,7 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Shops
 {
-    const OPINION = [ 0 => "neutral", 1 => "liked", 2 => "disliked" ];
 
     /**
      * @ORM\Id()
@@ -31,6 +32,16 @@ class Shops
      * @Assert\GreaterThanOrEqual(1)
      */
     private $distance;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PreferredShops", mappedBy="shops", orphanRemoval=true)
+     */
+    private $preferredShops;
+
+    public function __construct()
+    {
+        $this->preferredShops = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -57,6 +68,37 @@ class Shops
     public function setDistance(int $distance): self
     {
         $this->distance = $distance;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|PreferredShops[]
+     */
+    public function getPreferredShops(): Collection
+    {
+        return $this->preferredShops;
+    }
+
+    public function addPreferredShop(PreferredShops $preferredShop): self
+    {
+        if (!$this->preferredShops->contains($preferredShop)) {
+            $this->preferredShops[] = $preferredShop;
+            $preferredShop->setShops($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreferredShop(PreferredShops $preferredShop): self
+    {
+        if ($this->preferredShops->contains($preferredShop)) {
+            $this->preferredShops->removeElement($preferredShop);
+            // set the owning side to null (unless already changed)
+            if ($preferredShop->getShops() === $this) {
+                $preferredShop->setShops(null);
+            }
+        }
 
         return $this;
     }

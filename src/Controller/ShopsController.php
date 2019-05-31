@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
+ * CRUD controller
  * Class ShopsController
  * @package App\Controller
  * @Route("/admin")

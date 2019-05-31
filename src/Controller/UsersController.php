@@ -42,7 +42,7 @@ class UsersController extends AbstractController
     }
 
     /**
-     * @Route("/login",name="app_login",methods={"GET", "POST"})
+     * @Route("/",name="app_login",methods={"GET", "POST"})
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {

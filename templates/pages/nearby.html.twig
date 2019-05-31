@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>Nearby Shops</h1>
+    <div class="row flex">
+        {{ include( 'pages/shop/_view_shop.html.twig',{shops:shops}) }}
+    </div>
+
+    <div class="pagination">
+        {{ knp_pagination_render(shops) }}
+    </div>
+{% endblock %}

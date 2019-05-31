@@ -20,16 +20,17 @@ class UserFixtures extends Fixture
     }
 
     public function load(ObjectManager $objectManager)
-    {
+    {  //User Admin
        $user = new User();
        $user->setEmail("admin@gmail.com");
        $user->setPassword($this->encoder->encodePassword($user,'admin'));
        $user->setRoles(implode(';',['ROLE_ADMIN']));
 
-        $u = new User();
-        $u->setEmail("test@gmail.com");
-        $u->setPassword($this->encoder->encodePassword($user,'test'));
-        $u->setRoles(implode(';',['ROLE_USER']));
+       //User Test
+       $u = new User();
+       $u->setEmail("test@gmail.com");
+       $u->setPassword($this->encoder->encodePassword($user,'test'));
+       $u->setRoles(implode(';',['ROLE_USER']));
 
        $objectManager->persist($user);
        $objectManager->persist($u);

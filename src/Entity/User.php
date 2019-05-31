@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -33,6 +35,16 @@ class User implements UserInterface,\Serializable
      * @ORM\Column(type="text",nullable=true)
      */
     private $roles;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\PreferredShops", mappedBy="user", orphanRemoval=true)
+     */
+    private $preferredShops;
+
+    public function __construct()
+    {
+        $this->preferredShops = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -101,6 +113,37 @@ class User implements UserInterface,\Serializable
     public function getUsername():?string
     {
        return (string) $this->email;
+    }
+
+    /**
+     * @return Collection|PreferredShops[]
+     */
+    public function getPreferredShops(): Collection
+    {
+        return $this->preferredShops;
+    }
+
+    public function addPreferredShop(PreferredShops $preferredShop): self
+    {
+        if (!$this->preferredShops->contains($preferredShop)) {
+            $this->preferredShops[] = $preferredShop;
+            $preferredShop->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removePreferredShop(PreferredShops $preferredShop): self
+    {
+        if ($this->preferredShops->contains($preferredShop)) {
+            $this->preferredShops->removeElement($preferredShop);
+            // set the owning side to null (unless already changed)
+            if ($preferredShop->getUser() === $this) {
+                $preferredShop->setUser(null);
+            }
+        }
+
+        return $this;
     }
 
 

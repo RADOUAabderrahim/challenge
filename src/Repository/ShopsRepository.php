@@ -4,7 +4,11 @@ namespace App\Repository;
 
 use App\Entity\Shops;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Query\QueryBuilder;
+use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Doctrine\ORM\Query\Expr;
+
 
 /**
  * @method Shops|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +23,47 @@ class ShopsRepository extends ServiceEntityRepository
         parent::__construct($registry, Shops::class);
     }
 
-    // /**
-    //  * @return Shops[] Returns an array of Shops objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findAllShopNearByQuery() : Query
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+            ->orderBy('s.distance', 'ASC')
+            ->getQuery();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?Shops
+    /**
+     * find All Shop NearBy Without the one that are Liked or (the Disleked one that happen before 2 hours)
+     * @return Query
+     */
+    public function findAllShopNearByWLADQuery() : Query
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        //$query = "SELECT s.id,s.distance FROM App\Entity\Shops s LEFT JOIN s.preferredShops p WHERE p.id is null OR (p.opinion = 2 and p.updated_at <= DATE_SUB(NOW(),INTERVAL 2 HOUR) ) ORDER BY s.distance ASC";
+
+        $qb  = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('s')
+            ->from('App\Entity\Shops', 's')
+            ->leftJoin('s.preferredShops', 'p')
+            ->where('p.id is null')
+            ->orWhere('(p.opinion = 2  and p.updatedAt <= :date)')
+            ->setParameter('date', new \DateTime('-2 hours'))
+            ->orderBy('s.distance', 'ASC');
+
+        return $qb->getQuery();
     }
-    */
+
+
+    /**
+     * @return Query
+     */
+    public function findAllPreferredShopQuery($id): Query
+    {
+        $qb  = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('s')
+            ->from('App\Entity\Shops', 's')
+            ->leftJoin('s.preferredShops', 'p')
+            ->where('p.id is not null and p.opinion = 1 and p.user = :userId')
+            ->setParameter('userId', $id)
+            ->orderBy('s.distance', 'ASC');
+
+        return $qb->getQuery();
+    }
 }
